@@ -1,3 +1,5 @@
+import { creaCard,spinner,modalBody } from "./ul.js";
+
 const urlBase = 'https://rickandmortyapi.com/api/character/';
 
 const loadData = (url, page = 1) => {
@@ -30,14 +32,23 @@ const loadData = (url, page = 1) => {
 const loadCharacterInfo = (url, id) => {
     let urlCharacter = `${url}${id}`;
     console.log(urlCharacter);
-    fetch(urlCharacter)
-        .then(respuesta => respuesta.json())
-        .then(personaje => {
-            //TODO: Implementar Modal con info del personaje
-            console.log(personaje);
-            alert(personaje.name);
-        });
+    const modalContent = document.querySelector('.modal-body');
+    modalContent.removeChild(modalContent.firstChild);
+    modalContent.appendChild(spinner());
+    setTimeout(() => {
+        fetch(urlCharacter)
+            .then(respuesta => respuesta.json())
+            .then(personaje => {
+                //TODO: Implementar Modal con info del personaje
+                modalContent.removeChild(modalContent.firstChild);
+                document.querySelector('.modal-title').innerText = personaje.name;
+                modalContent.appendChild(modalBody(personaje));
+
+            });
+    }, 2000);
 }
+
+
 
 const showModal = (e) => {
     e.preventDefault();
@@ -71,34 +82,7 @@ const showCharacters = (personajes) => {
     })
 }
 
-const creaCard = (personaje) => {
-    const card = document.createElement('div');
-    card.style = 'float: left;';
-    const html = `
-    <div class="card m-2" style="width: 18rem; ">
-        <img loading="lazy" src="${personaje.image}" class="card-img-top" alt="...">
-        <div class="card-body">
-        <h5 class="card-title">${personaje.name}</h5>
-        <p class="card-text">${personaje.status}</p>
-        <button class="btn btn-primary" data-id="${personaje.id}">Ver más</a>
-        </div>
-    </div>`;
-    card.innerHTML = html;
-    return card;
-}
 
 
-//const creaButtons = () => {
-    //const contenedorButtons = document.querySelector('#botones');
-    //contenedorButtons.innerText = '';
-    //const btnPrev = document.createElement('button');
-   // btnPrev.id = 'prev';
-    //btnPrev.className = 'btn btn-success btn-lg mx-3';
-   // btnPrev.innerText = 'Anterior';
-    //contenedorButtons.appendChild(btnPrev);
-    //const btnNext = document.createElement('button');
-    //btnNext.id = 'next';
-    //btnNext.className = 'btn btn-success btn-lg mx-3';
-    //btnNext.innerText = 'Siguiente';
-    //contenedorButtons.appendChild(btnNext);
-//}
+
+
